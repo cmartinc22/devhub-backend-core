@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/deliveryhero/devhub-backend-core/models"
+	"github.com/cmartinc22/devhub-backend-core/models"
 	sts "github.com/deliveryhero/pd-sts-go-sdk"
 	"github.com/pedidosya/peya-go/logs"
 )

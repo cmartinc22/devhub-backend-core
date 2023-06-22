@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/deliveryhero/devhub-backend-core/clients"
-	"github.com/deliveryhero/devhub-backend-core/models"
+	"github.com/cmartinc22/devhub-backend-core/clients"
+	"github.com/cmartinc22/devhub-backend-core/models"
 	"github.com/pedidosya/peya-go/logs"
 	"github.com/pedidosya/peya-go/server"
 )

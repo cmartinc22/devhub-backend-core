@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/deliveryhero/devhub-backend-core/models"
+	"github.com/cmartinc22/devhub-backend-core/models"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // postgres driver
 	"github.com/pedidosya/peya-go/logs"

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/deliveryhero/devhub-backend-core/controllers"
+	"github.com/cmartinc22/devhub-backend-core/controllers"
 	"github.com/ghodss/yaml"
 	"github.com/pedidosya/peya-go/logs"
 	"github.com/pedidosya/peya-go/server"

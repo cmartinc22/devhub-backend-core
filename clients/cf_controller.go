@@ -8,7 +8,7 @@ import (
 	"os"
 
 	"github.com/coreos/go-oidc/v3/oidc"
-	"github.com/deliveryhero/devhub-backend-core/models"
+	"github.com/cmartinc22/devhub-backend-core/models"
 	"github.com/pedidosya/peya-go/logs"
 )
 

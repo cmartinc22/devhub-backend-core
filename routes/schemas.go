@@ -6,7 +6,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/deliveryhero/devhub-backend-core/handlers"
+	"github.com/cmartinc22/devhub-backend-core/handlers"
 	"github.com/pedidosya/peya-go/server"
 )
 
