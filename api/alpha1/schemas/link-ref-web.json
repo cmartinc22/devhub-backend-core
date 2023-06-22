@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "link-ref-web.json",
+  "description": "a link referent to links of type web",
+  "type": "string",
+  "allOf": [
+    { "$ref": "link-ref.json" },
+    {
+      "pattern": "^web:?"
+    }
+  ]
+}

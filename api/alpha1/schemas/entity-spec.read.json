@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "entity-spec.read.json",
+  "title": "Generic Entity Spec",
+  "description": "Common minimum set of editable information that all DevHub entities have. This schema can be refined depending on the value of the entity \"kind\" field",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "a human friendly name for this entity",
+      "type": "string"
+    },
+    "description": {
+      "description": "a human friendly description of this entity (one paragraph long)",
+      "type": "string",
+      "default": ""
+    },
+    "tags": {
+      "description": "an array of tags for this entity. Main use case is for filtering",
+      "type": "array",
+      "items": {
+        "$ref": "slug.json"
+      },
+      "default": []
+    },
+    "labels": {
+      "description": "a dictionary with string valued key/value pairs. Main use case is for filtering",
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]([a-z0-9-._/]*[a-z0-9])?$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "default": {},
+      "example": [
+        {
+          "github.com/project": "deliveryhero/devhub",
+          "dh.io/cd/cluster": "devhub-123"
+        }
+      ]
+    },
+    "links": {
+      "description": "an array of links to external systems that contain interesting information for this entity: Github, Drone, AWS, Jarvis, etc",
+      "type": "array",
+      "items": {
+        "$ref": "link.json"
+      },
+      "default": []
+    },
+    "docs": {
+      "description": "contains an array of link references of type \"web\" or \"backstage/docs\"",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          { "$ref": "link-ref-web.json" },
+          { "$ref": "link-ref-backstage-docs.json" }
+        ]
+      },
+      "default": []
+    }
+  },
+  "required": ["name"]
+}

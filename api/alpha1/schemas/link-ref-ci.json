@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "link-ref-ci.json",
+  "description": "a link referent to links of type ci",
+  "type": "string",
+  "allOf": [
+    { "$ref": "link-ref.json" },
+    {
+      "anyOf": [
+        {
+          "pattern": "^ci:?"
+        },
+        {
+          "pattern": "^drone:?"
+        },
+        {
+          "pattern": "^circleci:?"
+        }
+      ]
+    }
+  ]
+}

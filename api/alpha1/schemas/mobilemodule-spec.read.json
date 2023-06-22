@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "mobilemodule-spec.read.json",
+  "title": "MobileModule Spec",
+  "description": "The \"spec\" field of entities of kind \"mobilemodule\"",
+  "type": "object",
+  "allOf": [{ "$ref": "component-spec.read.json" }],
+  "properties": {
+    "application": {
+      "$ref": "mobileapp-ref.json"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "link-ref-source.json"
+      }
+    },
+    "ci": {
+      "description": "contains an array of link references of type 'ci'",
+      "$ref": "link-ref-ci.json"
+    },
+    "consumesApis": {
+      "type": "array",
+      "items": {
+        "$ref": "api-ref.json"
+      }
+    }
+  },
+  "required": ["application"]
+}

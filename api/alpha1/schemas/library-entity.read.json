@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "library-entity.read.json",
+  "title": "Library",
+  "description": "A 'Library' entity represents a utility that can be reused by other components",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity.read.json" },
+    {
+      "properties": {
+        "kind": { "const": "library" },
+        "spec": {
+          "$ref": "library-spec.read.json"
+        }
+      }
+    }
+  ]
+}

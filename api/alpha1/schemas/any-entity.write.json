@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "any-entity.write.json",
+  "title": "Any DevHub entity (write mode)",
+  "description": "Schema for any DevHub entity in YAML files (write mode)",
+  "type": "object",
+  "discriminatior": {
+    "propertyName": "kind"
+  },
+  "oneOf": [
+    {
+      "$ref": "api-entity.json"
+    },
+    {
+      "$ref": "backendapp-entity.json"
+    },
+    {
+      "$ref": "consumer-entity.json"
+    },
+    {
+      "$ref": "executable-entity.json"
+    },
+    {
+      "$ref": "scheduledtask-entity.json"
+    },
+    {
+      "$ref": "database-entity.json"
+    },
+    {
+      "$ref": "domain-entity.json"
+    },
+    {
+      "$ref": "filestorage-entity.json"
+    },
+    {
+      "$ref": "group-entity.json"
+    },
+    {
+      "$ref": "library-entity.json"
+    },
+    {
+      "$ref": "microfrontend-entity.json"
+    },
+    {
+      "$ref": "mobileapp-entity.json"
+    },
+    {
+      "$ref": "mobilemodule-entity.json"
+    },
+    {
+      "$ref": "queue-entity.json"
+    },
+    {
+      "$ref": "service-entity.json"
+    },
+    {
+      "$ref": "webfrontend-entity.json"
+    },
+    {
+      "$ref": "topic-entity.json"
+    },
+    {
+      "$ref": "user-entity.json"
+    }
+  ]
+}

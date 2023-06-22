@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "api-spec.json",
+  "title": "Api Spec",
+  "description": "The \"spec\" field of entities of kind \"api\"",
+  "type": "object",
+  "allOf": [
+    { "$ref": "component-spec.json" }
+  ],
+  "properties": {
+    "application": {
+      "$ref": "backendapp-ref.json",
+      "example": "backendapp:developer-portal"
+    },
+    "type": {
+      "description": "indicates what type of API specification language is used",
+      "type": "string",
+      "enum": ["openapi", "asyncapi", "graphql", "grpc"]
+    },
+    "definition": {
+      "anyOf": [
+        {
+          "$ref": "link-ref-source.json"
+        },
+        {
+          "$ref": "link-ref-web.json"
+        }
+      ],
+      "example": "github/repo:deliveryhero/dev-api"
+    }
+  },
+  "required": ["application", "type", "definition"]
+}

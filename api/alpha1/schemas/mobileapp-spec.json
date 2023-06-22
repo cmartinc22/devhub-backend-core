@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "mobileapp-spec.json",
+  "title": "MobileApp Spec",
+  "description": "The \"spec\" field of entities of kind \"mobileapp\"",
+  "type": "object",
+  "allOf": [{ "$ref": "application-spec.json" }],
+  "properties": {
+    "source": {
+      "$ref": "link-ref-source.json"
+    },
+    "platform": {
+      "$ref": "platform.json"
+    },
+    "ci": {
+      "description": "contains an array of link references of type 'ci'",
+      "$ref": "link-ref-ci.json"
+    },
+    "consumesApis": {
+      "type": "array",
+      "items": {
+        "$ref": "api-ref.json"
+      },
+      "default": []
+    }
+  }
+}

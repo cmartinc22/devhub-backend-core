@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "link-ref-backstage-docs.json",
+  "description": "a link referent to links of type backstage/docs",
+  "type": "string",
+  "allOf": [
+    { "$ref": "link-ref.json" },
+    {
+      "pattern": "^backstage/docs:?"
+    }
+  ]
+}

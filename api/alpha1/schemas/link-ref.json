@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "link-ref.json",
+  "description": "strings that take the form \"<link_type>[:<link_name>]\" and refers to links defined in the entity",
+  "type": "string",
+  "oneOf": [
+    { "pattern": "^[a-z]([a-z0-9-._/]*[a-z0-9])?$" },
+    {
+      "pattern": "^[a-z]([a-z0-9-._/]*[a-z0-9])?:[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?$"
+    }
+  ],
+  "examples": [
+    "web",
+    "backstage/docs",
+    "web:wiki-docs",
+    "backstage/docs:component-1"
+  ]
+}

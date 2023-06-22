@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "relationship.json",
+  "title": "Relationship Object",
+  "description": "Represents relationship between two interrelated entities",
+  "type": "object",
+  "properties": {
+    "target": {
+      "description": "specifies the entity that is being the destination of this relationship",
+      "$ref": "entity-ref.json"
+    },
+    "type": {
+      "description": "indicates what kind of semantic relationship there is between the source and the target",
+      "enum": [
+        "parentOf",
+        "childOf",
+        "partOf",
+        "hasPart",
+        "dependsOn",
+        "dependencyOf",
+        "providesApi",
+        "apiProvidedBy",
+        "consumesApi",
+        "apiConsumedBy",
+        "ownedBy",
+        "ownerOf"
+      ]
+    },
+    "name": {
+      "description": "is the name of the relationship. It is mandatory if there are several relationships of the same type",
+      "$ref": "slug.json",
+      "default": "default"
+    }
+  },
+  "required": ["target", "type"]
+}

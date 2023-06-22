@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "component-spec.json",
+  "title": "Component Spec",
+  "description": "The \"spec\" field of entities of kind \"component\". This entity should not be used as new kind. It's Abstract",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity-spec.json" },
+    {
+      "properties": {
+        "application": {
+          "description": "The \"Application\" entity that is accountable for this Component.",
+          "$comment": "Note that executable applications cannot have components so it is not listed here",
+          "oneOf": [
+            { "$ref": "backendapp-ref.json" },
+            { "$ref": "mobileapp-ref.json" },
+            { "$ref": "webfrontend-ref.json" }
+          ],
+          "example": "backendapp:developer-portal"
+        },
+        "owner": {
+          "description": "The \"Group\" entity that is accountable for this component.",
+          "$ref": "group-ref.json",
+          "example": "group:developer-experience"
+        },
+        "lifecycle": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Specifies if the application has been released to the public, is being deprecated or whether it is not in use any more.",
+              "enum": [
+                "launched",
+                "beta",
+                "alpha",
+                "development",
+                "deprecated",
+                "decommissioned"
+              ]
+            },
+            "launchDate": {
+              "description": "Applications can have a launch date even if they are not yet launched. In that case the date is interpreted as the expected launch date instead of the actual one.",
+              "type": "string",
+              "format": "date-time"
+            },
+            "decommisionDate": {
+              "description": "Applications can have a decommission date even if they are not yet decommissioned. In that case the date is interpreted as the expected decommission date instead of the actual one.",
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "example": {
+            "status": "beta",
+            "launchDate": "2023-05-16T20:44:00.716Z",
+            "decommisionDate": "2025-05-16T20:44:00.716Z"
+          }
+        },
+        "dependsOn": {
+          "description": "contains an array of references of type \"component\" or \"backstage/docs\"",
+          "type": "array",
+          "items": {
+            "$ref": "dependency-ref.json"
+          },
+          "example": [
+            "backendapp:devhub",
+            "service:sts-auth"
+          ]
+        },
+        "onCall": {
+          "description": "The \"Group\" entity that is accountable for this component.",
+          "oneOf": [
+            {
+              "$ref": "group-ref.json",
+              "example": "group:developer-experience"
+            },
+            {
+              "$ref": "link-ref-group.json",
+              "example": "github/team:devex"
+            }
+          ]
+        },
+        "visibility": {
+          "description": "defines who are the target users of this component",
+          "type": "string",
+          "enum": ["public", "internal", "private"],
+          "example": "internal"
+        },
+        "domain": {
+          "description": "Is a relationship pointing to the \"Domain\" entity that this component belongs to",
+          "$ref": "domain-ref.json",
+          "example": "domain:platform"
+        }
+      },
+      "required": ["application"]
+    }
+  ],
+  "example": {
+    "name": "DH Audit Log",
+    "application": "backendapp:platformdhauditlog",
+    "ci": "drone:drone-repo-slug",
+    "dependsOn": [
+      "database:platform-dh-audit-log-db"
+    ],
+    "description": "Service for storing and querying auditing logs",
+    "docs": [
+      "web:confluence"
+    ],
+    "labels":{
+        "sdb_namespace": "deliveryhero"
+    },
+    "lifecycle": {
+        "launchDate": "2021-07-01T00:00:00Z",
+        "status": "launched"
+    },
+    "links":[
+      {
+        "icon": "drone",
+        "name": "drone-repo-slug",
+        "target": "deliveryhero/pd-auditlog",
+        "title": "drone.io/repo-slug",
+        "type": "drone"
+      },
+      {
+        "icon": "docs",
+        "name": "confluence",
+        "target": "https://confluence.deliveryhero.com/display/GLOBAL/PS+-+Emergency+%7C+Playbook",
+        "title": "Documentation",
+        "type": "web"
+      },
+      {
+        "icon": "librarybooks",
+        "name": "github",
+        "target": "deliveryhero/pd-auditlog",
+        "title": "GitHub",
+        "type": "github/repo"
+      }
+    ],
+    "owner": "group:platform-platform-authorization-and-auditing",
+    "providesApis": [
+    "api:platform-dh-audit-log"
+    ],
+    "sources": [
+      "github/repo:github"
+    ],
+    "tags": [
+      "global"
+    ],
+    "tier": 4,
+    "visibility": "internal"
+
+  }
+}

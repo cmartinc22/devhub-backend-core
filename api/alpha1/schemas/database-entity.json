@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "database-entity.json",
+  "title": "Database",
+  "description": "A 'Database' entity represents a database used by some component in the application.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity.json" },
+    {
+      "properties": {
+        "kind": { "const": "database" },
+        "spec": {
+          "$ref": "database-spec.json"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "link.json",
+  "title": "External System Link",
+  "description": "Represents a link from an entity to an external system that contains interesting information for this entity: Github, Drone, AWS, Jarvis, etc",
+  "type": "object",
+  "properties": {
+    "type": {
+      "description": "is a string specifying what kind of system the link is pointing to, and what kind of object is pointing to",
+      "type": "string",
+      "pattern": "^[a-z]([a-z0-9-._/]*[a-z0-9])?$",
+      "examples": [
+        "ci",
+        "cd",
+        "web",
+        "circleci",
+        "codacy",
+        "drone",
+        "jira",
+        "opsgenie/components",
+        "opsgenie/team",
+        "github/repo",
+        "github/path",
+        "github/user",
+        "github/team",
+        "slack/user",
+        "slack/channel",
+        "backstage/docs",
+        "backstage/entity/<kind>",
+        "iiq/user",
+        "jarvis/squad",
+        "jarvis/tribe",
+        "jarvis/user",
+        "jarvis/app",
+        "jarvis/component",
+        "google/user",
+        "argo-cd/application"
+      ]
+    },
+    "name": {
+      "description": "is a string used to differentiate two different links to the same type of external system",
+      "$ref": "slug.json",
+      "default": "default"
+    },
+    "target": {
+      "description": "is a string that uniquely identifies the entity in the external system. Its actual value format can change depending on the type of the link.",
+      "type": "string",
+      "default": ""
+    },
+    "title": {
+      "description": "is a human friendly name for this system link, for example \"On-call rotation\" or \"Opsgenie service\"",
+      "type": "string",
+      "default": ""
+    },
+    "icon": {
+      "description": "is an icon that could be used to be shown in the UI",
+      "type": "string",
+      "default": ""
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [{ "const": "backstage/docs" }]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "anyOf": [
+              {
+                "pattern": "^[(http(s)?)://(www\\.)?a-zA-Z0-9@:%._\\-\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\[\\]\\$\\+.~#?&//=]*)$"
+              },
+              {
+                "pattern": "^[a-z]([a-z0-9-._/]*[a-z0-9])?:[a-zA-Z0-9\\./][a-zA-Z0-9-\\./]*?$"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              { "const": "web" },
+              { "const": "slack/user" },
+              { "const": "slack/channel" }
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "pattern": "^[(http(s)?)://(www\\.)?a-zA-Z0-9@:%._\\-\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\[\\]\\$\\+.~#?&//=]*)$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "const": "circleci" }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "pattern": "^(github|gh|bitbucket|bb)/[a-zA-Z0-9-_.~:@%$=#]+/[a-zA-Z0-9-_.~:@%$=#]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              { "pattern": "^backstage/entity/[a-z]([a-z0-9-._/]*[a-z0-9])?$" }
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "pattern": "^[a-z0-9]([a-z0-9-_]*[a-z0-9])?/[a-z0-9]([a-z0-9-_]*[a-z0-9])?$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              { "const": "codacy" },
+              { "const": "drone" },
+              { "const": "github/user" },
+              { "const": "github/team" }
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "pattern": "^[a-zA-Z0-9-_.~:@%$=#]+/[a-zA-Z0-9-_.~:@%$=#]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [{ "const": "jira" }]
+          }
+        }
+      },
+      "then": {
+        "properties": { "target": { "pattern": "^[A-Z][A-Z_0-9]+$" } }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [
+              { "const": "opsgenie/components" },
+              { "const": "opsgenie/team" }
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "pattern": "(?s).*",
+            "not": {
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [{ "const": "github/repo" }]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "pattern": "^[a-zA-Z0-9-_.~:@%$=#]+/[a-zA-Z0-9-_.~:@%$=#]+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [{ "const": "github/path" }]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": {
+            "pattern": "^[a-zA-Z0-9-_.~:@%$=#]+/[a-zA-Z0-9-_.~:@%$=#]+(/[a-zA-Z0-9-_.~:@%$=#]+)+$"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "anyOf": [{ "const": "github/admin" }]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target": { "pattern": "^[a-zA-Z0-9-_.~:%$=#]+$" }
+        }
+      }
+    }
+  ],
+  "required": ["type", "target"]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "webfrontend-spec.json",
+  "title": "WebFrontend Spec",
+  "description": "The \"spec\" field of entities of kind \"WebFrontend\"",
+  "type": "object",
+  "allOf": [
+    { "$ref": "application-spec.json" }
+  ],
+  "properties": {
+    "source": {
+      "$ref": "link-ref-source.json",
+      "description": "Reference that should point to the source code of the application. In case of single web applications this would point to the sources of the shell/frame or to the monorepo with all the microfrontends"
+    },
+    "ci":{
+      "description": "contains an array of link references of type 'ci'",
+      "$ref": "link-ref-ci.json"
+    },
+    "consumesApis": {
+      "type": "array",
+      "items": {
+        "$ref": "api-ref.json"
+      }
+    }
+  }
+}

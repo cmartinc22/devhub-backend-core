@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "application-spec.json",
+  "title": "Application Spec",
+  "description": "The \"spec\" field of entities of kind \"application\" (backendapp, mobileapp, microfrontend, executable). This entity should not be used as new kind. It's Abstract",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity-spec.json" },
+    {
+      "properties": {
+        "domain": {
+          "description": "Is a relationship pointing to the \"Domain\" entity that this application belongs to",
+          "$ref": "domain-ref.json",
+          "example": "domain:platform"
+        },
+        "owner": {
+          "description": "The \"Group\" entity that is accountable for this domain.",
+          "$ref": "group-ref.json",
+          "example": "group:developer-experience"
+        },
+        "lifecycle": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "description": "Specifies if the application has been released to the public, is being deprecated or whether it is not in use any more.",
+              "enum": [
+                "launched",
+                "beta",
+                "alpha",
+                "development",
+                "deprecated",
+                "decommissioned"
+              ]
+            },
+            "launchDate": {
+              "description": "Applications can have a launch date even if they are not yet launched. In that case the date is interpreted as the expected launch date instead of the actual one.",
+              "type": "string",
+              "format": "date-time"
+            },
+            "decommisionDate": {
+              "description": "Applications can have a decommission date even if they are not yet decommissioned. In that case the date is interpreted as the expected decommission date instead of the actual one.",
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": ["status"]
+        },
+        "cd": {
+          "description": "contains an array of link references of type 'cd'",
+          "type": "array",
+          "items": {
+            "$ref": "link-ref-cd.json"
+          }
+        },
+        "onCall": {
+          "description": "The \"Group\" entity that is accountable for this application.",
+          "oneOf": [
+            {
+              "$ref": "group-ref.json",
+              "example": "group:developer-experience"
+            },
+            {
+              "$ref": "link-ref-group.json",
+              "example": "github/team:devex"
+            }
+          ]
+        },
+        "visibility": {
+          "description": "defines who are the target users of this application",
+          "type": "string",
+          "enum": ["public", "internal", "private"],
+          "default": "internal"
+        }
+      },
+      "required": ["lifecycle"],
+      "if": {
+        "properties": { "domain": false }
+      },
+      "then": {
+        "required": ["owner"]
+      }
+    }
+  ]
+}

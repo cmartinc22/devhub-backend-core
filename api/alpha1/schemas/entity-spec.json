@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "entity-spec.json",
+  "title": "Generic Entity Spec",
+  "description": "Common minimum set of editable information that all DevHub entities have. This schema can be refined depending on the value of the entity \"kind\" field",
+  "type": "object",
+  "properties": {
+    "name": {
+      "description": "a human friendly name for this entity",
+      "type": "string",
+      "example": "Develeper Portal"
+    },
+    "description": {
+      "description": "a human friendly description of this entity (one paragraph long)",
+      "type": "string",
+      "default": "",
+      "example": "Develeper Portal Backend Application"
+    },
+    "tags": {
+      "description": "an array of tags for this entity. Main use case is for filtering",
+      "type": "array",
+      "items": {
+        "$ref": "slug.json"
+      },
+      "default": [],
+      "example": ["backend", "backstage", "portal"]
+    },
+    "labels": {
+      "description": "a dictionary with string valued key/value pairs. Main use case is for filtering",
+      "type": "object",
+      "patternProperties": {
+        "^[a-z]([a-z0-9-._/]*[a-z0-9])?$": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "default": {},
+      "example": {
+        "github.com/project": "deliveryhero/devhub"
+      }
+    },
+    "links": {
+      "description": "an array of links to external systems that contain interesting information for this entity: Github, Drone, AWS, Jarvis, etc",
+      "type": "array",
+      "items": {
+        "$ref": "link.json"
+      },
+      "default": [],
+      "example": [
+        {
+          "icon": "argo",
+          "name": "argo",
+          "target": "https://argo-cd.deliveryhero.net/applications/developer-portal",
+          "type": "cd"
+        },
+        {
+          "icon": "github",
+          "name": "source_code",
+          "target": "deliveryhero/developer-portal",
+          "type": "github/repo"
+        },
+        {
+          "icon": "docs",
+          "name": "backstage-io-techdocs-ref",
+          "target": "ttps://github.com/deliveryhero/dh-backstage/tree/master",
+          "title": "backstage.io/techdocs-ref",
+          "type": "backstage/docs"
+        },
+        {
+          "icon": "docs",
+          "name": "documentation",
+          "target": "https://confluence.deliveryhero.com/display/PLATFORM/Developer+Portal",
+          "title": "Documentation",
+          "type": "web"
+        }
+      ]
+    },
+    "docs": {
+      "description": "contains an array of link references of type \"web\" or \"backstage/docs\"",
+      "type": "array",
+      "items": {
+        "anyOf": [
+          { "$ref": "link-ref-web.json" },
+          { "$ref": "link-ref-backstage-docs.json" }
+        ]
+      },
+      "default": [],
+      "example": [
+        "backstage/docs:backstage-io-techdocs-ref",
+        "web:documentation"
+      ]
+    }
+  },
+  "required": ["name"]
+}

@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "any-entity-spec.write.json",
+  "title": "Any Entity Spec Write",
+  "description": "Write spec schemas for all entities.",
+  "type": "object",
+  "oneOf": [
+    {
+      "$ref": "api-spec.json"
+    },
+    {
+      "$ref": "backendapp-spec.json"
+    },
+    {
+      "$ref": "executable-spec.json"
+    },
+    {
+      "$ref": "consumer-spec.json"
+    },
+    {
+      "$ref": "scheduledtask-spec.json"
+    },
+    {
+      "$ref": "database-spec.json"
+    },
+    {
+      "$ref": "domain-spec.json"
+    },
+    {
+      "$ref": "filestorage-spec.json"
+    },
+    {
+      "$ref": "group-spec.json"
+    },
+    {
+      "$ref": "library-spec.json"
+    },
+    {
+      "$ref": "microfrontend-spec.json"
+    },
+    {
+      "$ref": "mobileapp-spec.json"
+    },
+    {
+      "$ref": "mobilemodule-spec.json"
+    },
+    {
+      "$ref": "queue-spec.json"
+    },
+    {
+      "$ref": "service-spec.json"
+    },
+    {
+      "$ref": "webfrontend-spec.json"
+    },
+    {
+      "$ref": "topic-spec.json"
+    },
+    {
+      "$ref": "user-spec.json"
+    }
+  ],
+  "example": {
+    "name": "Developer Portal",
+    "description": "This is a Backend Application for developer portal",
+    "domain": "domain:platform",
+    "onCall": "group:developer-experience",
+    "owner": "group:developer-experience",
+    "tier": 2,
+    "cd": [
+        "cd:argo"
+    ],
+    "docs": [],
+    
+    "labels": {
+        "kind": "backendapp"
+    },
+    "lifecycle": {
+        "status": "deployed"
+    },
+    "links": [
+        {
+            "icon": "argo",
+            "name": "argo",
+            "target": "https://argo-cd.deliveryhero.net/applications/dev-portal",
+            "type": "cd"
+        }
+    ],
+    "tags": [
+        "backendapp"
+    ],
+    "visibility": "internal"
+  }
+}

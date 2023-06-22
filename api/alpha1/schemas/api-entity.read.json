@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "api-entity.read.json",
+  "title": "Api",
+  "description": "A 'Api' entity represents a formal specification of an HTTP API.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity.read.json" },
+    {
+      "properties": {
+        "kind": { "const": "api" },
+        "spec": {
+          "$ref": "api-spec.read.json"
+        }
+      }
+    }
+  ]
+}

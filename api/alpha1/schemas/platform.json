@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "platform.json",
+  "title": "Platform description",
+  "description": "The type of the \"platform\" field",
+  "type": "object",
+  "properties": {
+    "language": {
+      "type": "string",
+      "description": "defines the language this entity is coded in",
+      "examples": ["java", "scala", "golang", "typescript", "javascript"]
+    },
+    "runtime": {
+      "type": "string",
+      "description": "defines what kind of runtime is supported, it can be an OS name, “jvm”, “node”, “react”, etc",
+      "examples": ["node", "jvm", "react"]
+    },
+    "versions": {
+      "type": "array",
+      "description": "an array of versions of the runtime this entity is compatible with",
+      "items": {
+        "$ref": "version.json"
+      }
+    }
+  }
+}

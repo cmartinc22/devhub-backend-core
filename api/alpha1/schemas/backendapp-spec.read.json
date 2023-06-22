@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "backendapp-spec.read.json",
+  "title": "BackendApp Spec",
+  "description": "The \"spec\" field of entities of kind \"backendapp\"",
+  "type": "object",
+  "allOf": [{ "$ref": "application-spec.read.json" }],
+  "properties": {
+    "tier": {
+      "description": "'tier' is an integer from 1 to 4 specifying how critical is this application",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    }
+  },
+  "required": ["tier"]
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "consumer-spec.read.json",
+  "title": "Consumer Spec",
+  "description": "The \"spec\" field of entities of kind \"consumer\"",
+  "type": "object",
+  "allOf": [{ "$ref": "component-spec.read.json" }],
+  "properties": {
+    "application": {
+      "$ref": "backendapp-ref.json"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "link-ref-source.json"
+      }
+    },
+    "ci": {
+      "description": "contains an array of link references of type 'ci'",
+      "$ref": "link-ref-ci.json"
+    },
+    "tier": {
+      "description": "'tier' is an integer from 1 to 4 specifying how critical is this component",
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4
+    },
+    "consumesFrom": {
+      "type": "array",
+      "items": {
+        "anyOf": [{ "$ref": "topic-ref.json" }, { "$ref": "queue-ref.json" }]
+      }
+    },
+    "publishesTo": {
+      "type": "array",
+      "items": {
+        "anyOf": [{ "$ref": "topic-ref.json" }, { "$ref": "queue-ref.json" }]
+      }
+    },
+    "consumesApis": {
+      "type": "array",
+      "items": {
+        "$ref": "api-ref.json"
+      }
+    }
+  },
+  "required": ["application"]
+}

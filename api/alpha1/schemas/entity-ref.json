@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "entity-ref.json",
+  "description": "strings that take the form \"[<kind>:]<name>\" used to refer to other entities. The \"kind\" segment is optional. When not specified it means that it does not matter what kind the entity is. When specified we have a typed relationship that enforces what kind the target entity must be.",
+  "type": "string",
+  "oneOf": [
+    { "pattern": "^[a-z0-9]([a-z0-9-_]*[a-z0-9])?$" },
+    {
+      "pattern": "^[a-z0-9]([a-z0-9-_]*[a-z0-9])?:[a-z0-9]([a-z0-9-_]*[a-z0-9])?$"
+    }
+  ],
+  "example": "webfrontend:developer-portal"
+}

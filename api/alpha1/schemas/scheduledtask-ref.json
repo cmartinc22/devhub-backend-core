@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "scheduledtask-ref.json",
+  "description": "Entity references that only accept \"ScheduledTask\" entities as target.",
+  "type": "string",
+  "allOf": [
+    { "$ref": "entity-ref.json" },
+    {
+      "type": "string",
+      "pattern": "^scheduledtask:[a-z0-9]([a-z0-9-_]*[a-z0-9])?$"
+    }
+  ],
+  "example": "scheduledtask:dh-export-users"
+}

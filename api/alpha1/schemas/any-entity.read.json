@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "any-entity.read.json",
+  "title": "Any Entity Read",
+  "description": "Read schemas for all entities.",
+  "type": "object",
+  "discriminatior": {
+    "propertyName": "kind"
+  },
+  "oneOf": [
+    {
+      "$ref": "api-entity.read.json"
+    },
+    {
+      "$ref": "backendapp-entity.read.json"
+    },
+    {
+      "$ref": "consumer-entity.read.json"
+    },
+    {
+      "$ref": "executable-entity.read.json"
+    },
+    {
+      "$ref": "scheduledtask-entity.read.json"
+    },
+    {
+      "$ref": "database-entity.read.json"
+    },
+    {
+      "$ref": "domain-entity.read.json"
+    },
+    {
+      "$ref": "filestorage-entity.read.json"
+    },
+    {
+      "$ref": "group-entity.read.json"
+    },
+    {
+      "$ref": "library-entity.read.json"
+    },
+    {
+      "$ref": "microfrontend-entity.read.json"
+    },
+    {
+      "$ref": "mobileapp-entity.read.json"
+    },
+    {
+      "$ref": "mobilemodule-entity.read.json"
+    },
+    {
+      "$ref": "queue-entity.read.json"
+    },
+    {
+      "$ref": "service-entity.read.json"
+    },
+    {
+      "$ref": "webfrontend-entity.read.json"
+    },
+    {
+      "$ref": "topic-entity.read.json"
+    },
+    {
+      "$ref": "user-entity.read.json"
+    }
+  ],
+  "example": {
+    "apiVersion": "alpha1",
+    "kind": "backendapp",
+    "slug": "developer-portal",
+    "changeControl": {
+        "createdAt": "2023-03-15T16:21:54.726764Z",
+        "changedAt": "2023-05-10T16:27:38.499558Z",
+        "version": "0e51428a9e93f72e31f4f4e2a1aa10cc1b5866c7d681bcdac5121d8706a5aa91",
+        "lastChangedBy": "user:employee@deliveryhero.com",
+        "createdBy": "backstage"
+    },
+    "relationships": [
+        {
+            "target": "domain:platform",
+            "type": "partOf",
+            "name": "domain"
+        },
+        {
+            "target": "group:developer-experience",
+            "type": "ownedBy",
+            "name": "owner"
+        },
+        {
+            "target": "group:developer-experience",
+            "type": "ownedBy",
+            "name": "onCall"
+        },
+        {
+            "target": "api:developer-api",
+            "type": "hasPart",
+            "name": "application"
+        },
+        {
+            "target": "service:backstage-service",
+            "type": "hasPart",
+            "name": "application"
+        }
+    ],
+    "spec": {
+        "cd": [
+            "cd:argo"
+        ],
+        "description": "This is a Backend application for developer portal",
+        "docs": [],
+        "domain": "domain:platform",
+        "labels": {
+            "kind": "backendapp"
+        },
+        "lifecycle": {
+            "status": "deployed"
+        },
+        "links": [
+            {
+                "icon": "argo",
+                "name": "argo",
+                "target": "https://argo-cd.deliveryhero.net/applications/dev-portal",
+                "type": "cd"
+            }
+        ],
+        "name": "Developer Portal",
+        "onCall": "group:developer-experience",
+        "owner": "group:developer-experience",
+        "tags": [
+            "backendapp"
+        ],
+        "tier": 2,
+        "visibility": "internal"
+    }
+  }
+}

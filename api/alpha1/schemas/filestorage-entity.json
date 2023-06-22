@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "filestorage-entity.json",
+  "title": "FileStorage",
+  "description": "A 'FileStorage' entity represents a file system like storage used by some component in the application",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity.json" },
+    {
+      "properties": {
+        "kind": { "const": "filestorage" },
+        "spec": {
+          "$ref": "filestorage-spec.json"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "topic-spec.read.json",
+  "title": "Topic Spec",
+  "description": "The \"spec\" field of entities of kind \"topic\"",
+  "type": "object",
+  "allOf": [{ "$ref": "component-spec.read.json" }],
+  "properties": {
+    "application": {
+      "$ref": "backendapp-ref.json"
+    },
+    "type": {
+      "description": "indicates the type of pub/sub mechanism, for example 'sns'",
+      "type": "string"
+    }
+  },
+  "required": ["application", "type"]
+}

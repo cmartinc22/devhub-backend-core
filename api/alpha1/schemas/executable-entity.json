@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "executable-entity.json",
+  "title": "Executable",
+  "description": "An 'Executable' entity represents a standalone application that be run directly by the users from their local computer. It can also be run as part of a CI/CD pipeline or used by another executable",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity.json" },
+    {
+      "properties": {
+        "kind": { "const": "executable" },
+        "spec": {
+          "$ref": "executable-spec.json"
+        }
+      }
+    }
+  ]
+}

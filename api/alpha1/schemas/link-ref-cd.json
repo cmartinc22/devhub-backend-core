@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "link-ref-cd.json",
+  "description": "a link referent to links of type cd",
+  "type": "string",
+  "allOf": [
+    { "$ref": "link-ref.json" },
+    {
+      "anyOf": [
+        {
+          "pattern": "^cd:?"
+        },
+        {
+          "pattern": "^web:?"
+        },
+        {
+          "pattern": "^github/path:?"
+        },
+        {
+          "pattern": "^github/repo:?"
+        },
+        {
+          "pattern": "^argo-cd/application:?"
+        }
+      ]
+    }
+  ]
+}

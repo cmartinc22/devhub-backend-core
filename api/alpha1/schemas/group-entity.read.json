@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "group-entity.read.json",
+  "title": "Group",
+  "description": "An external entity to express ownership.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity.read.json" },
+    {
+      "properties": {
+        "kind": { "const": "group" },
+        "spec": {
+          "$ref": "group-spec.read.json"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "news-response.json",
+  "title": "News endpoint 200 response",
+  "description": "The successful response of the news endpoint",
+  "type": "object",
+  "properties": {
+    "results": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "op": {
+            "enum": ["created", "updated", "archived"],
+            "example": "created",
+            "description": "'created' for new entities, 'updated' for entities that already exist and were updated, 'archived' for arcived/deleted entities"
+          },
+          "entity": {
+            "$ref": "any-entity.read.json"
+          }
+        },
+        "required": ["op", "entity"]
+      }
+    },
+    "pageInfo": {
+      "type": "object",
+      "properties": {
+        "next": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    }
+  },
+  "required": ["results", "pageInfo"],
+  "example": {
+    "results": [
+      {
+        "op": "archived",
+        "entity": {
+          "kind": "test",
+          "slug": "test"
+        }
+      }
+    ],
+    "pageInfo": {
+      "next": "MjAyMi0xMi0xNFQxNzoyNzoxMC41NDA4ODZaLGJiNDI5YzUwLTVkZDUtNDhjMC05MWY4LWViZmZjMDg2MDk4Mg=="
+    }
+  }
+}

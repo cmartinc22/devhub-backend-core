@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "mobilemodule-entity.read.json",
+  "title": "MobileModule",
+  "description": "A 'MobileModule' entity represents a module that is embedded into a mobile application. They cannot be released independently in a store, but they can be built and packaged.",
+  "type": "object",
+  "allOf": [
+    { "$ref": "entity.read.json" },
+    {
+      "properties": {
+        "kind": { "const": "mobilemodule" },
+        "spec": {
+          "$ref": "mobilemodule-spec.read.json"
+        }
+      }
+    }
+  ]
+}

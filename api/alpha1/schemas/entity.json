@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "entity.json",
+  "title": "Generic Entity",
+  "description": "Common fields for all DevHub entities.",
+  "type": "object",
+  "properties": {
+    "apiVersion": {
+      "const": "alpha1"
+    },
+    "kind": {
+      "description": "specifies what this entity is, and the schema for the \"spec\" field varies depending on its value",
+      "$ref": "slug.json"
+    },
+    "slug": {
+      "description": "the name of the entity, must be unique within the namespace",
+      "$ref": "slug.json"
+    },
+    "changeControl": {
+      "type": "object",
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "changedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastChangedBy": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": ["version"],
+      "readOnly": true
+    },
+    "spec": {
+      "description": "Editable information for the entity. Although there is a basic minimum set, depending on the \"kind\" field extra fields can be required.",
+      "$ref": "entity-spec.json"
+    }
+  },
+  "required": ["apiVersion", "kind", "slug", "spec"]
+}

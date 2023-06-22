@@ -1,0 +1,46 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "executable-spec.json",
+  "title": "Executable Spec",
+  "description": "The \"spec\" field of entities of kind \"Executable\"",
+  "type": "object",
+  "allOf": [{ "$ref": "application-spec.json" }],
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "A more fine grained description of the kind of executable this entity is.",
+      "examples": ["script", "exe", "executable", "binary", "cli"]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "link-ref-source.json"
+      }
+    },
+    "ci": {
+      "description": "contains an array of link references of type 'ci'",
+      "$ref": "link-ref-ci.json"
+    },
+    "platform": {
+      "$ref": "platform.json"
+    },
+    "licence": {
+      "type": "string"
+    },
+    "dependsOn": {
+      "description": "contains an array of references",
+      "type": "array",
+      "items": {
+        "$ref": "dependency-ref.json"
+      },
+      "default": []
+    },
+    "consumesApis": {
+      "type": "array",
+      "items": {
+        "$ref": "api-ref.json"
+      }
+    }
+  },
+  "required": ["sources", "owner", "lifecycle"]
+}
