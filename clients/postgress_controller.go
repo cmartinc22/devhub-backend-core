@@ -20,11 +20,12 @@ const (
 type PostgressControllerSpec interface {
 	Ping(context.Context) error
 	GetConnectionString(context.Context) string
+	Db() *sqlx.DB
 }
 
 type PostgressClient struct {
 	Config *models.DbConfiguration
-	Db     *sqlx.DB
+	Database     *sqlx.DB
 }
 
 // NewClient creates an STS client that contains the introspection service.
@@ -37,13 +38,13 @@ func NewPostgressClient() (PostgressControllerSpec, error) {
 	}
 	db = db.Unsafe()
 
-	r := &PostgressClient{Config: cfg, Db: db}
+	r := &PostgressClient{Config: cfg, Database: db}
 
-	r.Db.SetMaxOpenConns(10)   // The default is 0 (unlimited)
-	r.Db.SetMaxIdleConns(2)    // defaultMaxIdleConns = 2
-	r.Db.SetConnMaxLifetime(0) // 0, connections are reused forever.
+	r.Database.SetMaxOpenConns(10)   // The default is 0 (unlimited)
+	r.Database.SetMaxIdleConns(2)    // defaultMaxIdleConns = 2
+	r.Database.SetConnMaxLifetime(0) // 0, connections are reused forever.
 
-	if err = r.Db.Ping(); err != nil {
+	if err = r.Database.Ping(); err != nil {
 		return nil, err
 	}
 
@@ -107,7 +108,7 @@ func readDBConfig() *models.DbConfiguration {
 
 func (db *PostgressClient) Ping(context.Context) error {
 	if db.Db != nil {
-		return db.Db.Ping()
+		return db.Database.Ping()
 	}
 	return errors.New("missing db conection")
 }
@@ -118,4 +119,8 @@ func formatConnectinoString(cfg models.DbConfiguration) string {
 
 func (db *PostgressClient) GetConnectionString(context.Context) string {
 	return formatConnectinoString(*db.Config)
+}
+
+func (db *PostgressClient) Db() *sqlx.DB {
+	return db.Database
 }
