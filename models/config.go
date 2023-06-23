@@ -9,11 +9,12 @@ type DiagnosticsConfig struct {
 }
 
 type DbConfiguration struct {
-	Server   string `json:"server" yaml:"server"`
-	Port     int    `json:"port" yaml:"port"`
-	Database string `json:"database" yaml:"database"`
-	User     string `json:"user" yaml:"user"`
-	Password string `json:"pwd" yaml:"pwd"`
+	Server        string `json:"server" yaml:"server"`
+	Port          int    `json:"port" yaml:"port"`
+	Database      string `json:"database" yaml:"database"`
+	User          string `json:"user" yaml:"user"`
+	Password      string `json:"pwd" yaml:"pwd"`
+	ConnectionStr string `json:"connStr" yaml:"connStr"`
 }
 
 type STSConfiguration struct {
@@ -26,7 +27,7 @@ type STSConfiguration struct {
 }
 
 type CFConfiguration struct {
-	Enabled    bool   `json:"enabled" yaml:"enabled"`
-	AUD        string `json:"AUD" yaml:"AUD"`
-	ServicePublicDomain     string `json:"servicePublicDomain" yaml:"servicePublicDomain"`
+	Enabled             bool   `json:"enabled" yaml:"enabled"`
+	AUD                 string `json:"AUD" yaml:"AUD"`
+	ServicePublicDomain string `json:"servicePublicDomain" yaml:"servicePublicDomain"`
 }

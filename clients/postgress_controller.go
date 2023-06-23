@@ -2,6 +2,7 @@ package clients
 
 import (
 	//"context"
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -13,21 +14,24 @@ import (
 	"github.com/pedidosya/peya-go/logs"
 )
 
+const (
+	defauiltConnString = "postgres://%s:%s@%s:%v/%s?sslmode=disable"
+)
 type PostgressControllerSpec interface {
-	Ping() error
+	Ping(context.Context) error
+	GetConnectionString(context.Context) string
 }
 
 type PostgressClient struct {
-	Config               *models.DbConfiguration
-	Db *sqlx.DB
+	Config *models.DbConfiguration
+	Db     *sqlx.DB
 }
 
 // NewClient creates an STS client that contains the introspection service.
 func NewPostgressClient() (PostgressControllerSpec, error) {
 	cfg := readDBConfig()
-	
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%v/%s?sslmode=disable", cfg.User, cfg.Password, cfg.Server, cfg.Port, cfg.Database)
-	db, err := sqlx.Open("postgres", connStr)
+
+	db, err := sqlx.Open("postgres", formatConnectinoString(*cfg))
 	if err != nil {
 		return nil, err
 	}
@@ -46,11 +50,11 @@ func NewPostgressClient() (PostgressControllerSpec, error) {
 	return r, nil
 }
 
-func readDBConfig() (*models.DbConfiguration) {
+func readDBConfig() *models.DbConfiguration {
 	// Get Configuration FROM ENV
 	cfg := &models.DbConfiguration{}
 
-	//POSTGRES DB configurations
+	// POSTGRES DB configurations
 	if v, ok := os.LookupEnv("POSTGRES_HOST"); ok {
 		cfg.Server = v
 	} else {
@@ -58,18 +62,17 @@ func readDBConfig() (*models.DbConfiguration) {
 	}
 
 	if v, ok := os.LookupEnv("POSTGRES_PORT"); ok {
-			i, err := strconv.Atoi(v)
-			if err == nil {
-				cfg.Port = i
-			} else {
-				logs.Debug("[main] using default port for postgres")
-				cfg.Port = 5432
-			}
+		i, err := strconv.Atoi(v)
+		if err == nil {
+			cfg.Port = i
+		} else {
+			logs.Debug("[main] using default port for postgres")
+			cfg.Port = 5432
+		}
 	} else {
 		logs.Debug("[main] missing POSTGRES_PORT environment. Using default port for postgres")
 		cfg.Port = 5432
 	}
-
 
 	if v, ok := os.LookupEnv("POSTGRES_DB"); ok {
 		if ok {
@@ -90,12 +93,29 @@ func readDBConfig() (*models.DbConfiguration) {
 	} else {
 		logs.Fatal("[main] missing POSTGRES_PASSWORD environment or db.pwd setting")
 	}
+
+	if v, ok := os.LookupEnv("POSTGRES_CONN_STR"); ok {
+		cfg.ConnectionStr = v
+	} else {
+		cfg.ConnectionStr = defauiltConnString
+		logs.Debug("[main] missing POSTGRES_CONN_STR environment. Using Default")
+	}
+
+
 	return cfg
 }
 
-func (db *PostgressClient) Ping() error {
+func (db *PostgressClient) Ping(context.Context) error {
 	if db.Db != nil {
 		return db.Db.Ping()
 	}
 	return errors.New("missing db conection")
+}
+
+func formatConnectinoString(cfg models.DbConfiguration) string {
+	return fmt.Sprintf(cfg.ConnectionStr, cfg.User, cfg.Password, cfg.Server, cfg.Port, cfg.Database)
+}
+
+func (db *PostgressClient) GetConnectionString(context.Context) string {
+	return formatConnectinoString(*db.Config)
 }
