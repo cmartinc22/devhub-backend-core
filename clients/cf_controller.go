@@ -6,14 +6,18 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"sync"
 
-	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/cmartinc22/devhub-backend-core/models"
+	"github.com/coreos/go-oidc/v3/oidc"
 	"github.com/pedidosya/peya-go/logs"
 )
 
+var lock = &sync.Mutex{}
+
 type CFControllerSpec interface {
 	Validate(ctx context.Context, accessToken string) (*oidc.IDToken, error)
+	ValidateCFToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error)
 }
 
 type CFClient struct {
@@ -23,8 +27,35 @@ type CFClient struct {
 	verifier *oidc.IDTokenVerifier
 }
 
+var cFClientInstance *CFClient
+
 const teamDomain = "https://deliveryhero.cloudflareaccess.com"
 
+func getCFClient() *CFClient {
+	if cFClientInstance == nil {
+		lock.Lock()
+		defer lock.Unlock()
+		if cFClientInstance == nil {
+			fmt.Println("Creating single instance now.")
+			c := readCFConfig()
+			cFClientInstance = &CFClient{
+				enabled: c.Enabled,
+				config:  c,
+				cfConfig: &oidc.Config{
+					ClientID: c.AUD,
+				},
+			}
+		} else {
+			fmt.Println("Single instance already created.")
+		}
+	} else {
+		fmt.Println("Single instance already created.")
+	}
+
+	return cFClientInstance
+}
+
+/*
 func NewCFClient() CFControllerSpec {
 	c := readCFConfig()
 	return &CFClient{
@@ -35,6 +66,7 @@ func NewCFClient() CFControllerSpec {
 		},
 	}
 }
+*/
 
 func (c *CFClient) Validate(ctx context.Context, accessToken string) (*oidc.IDToken, error) {
 	if c.verifier == nil {
@@ -44,7 +76,7 @@ func (c *CFClient) Validate(ctx context.Context, accessToken string) (*oidc.IDTo
 	return c.verifier.Verify(ctx, accessToken)
 }
 
-func (c *CFClient) validateCFToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error) {
+func (c *CFClient) ValidateCFToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error) {
 	if !c.enabled {
 		return &models.AuthResult{
 			IsValid: true,
@@ -90,7 +122,7 @@ func (c *CFClient) validateCFToken(ctx context.Context, accessToken string, scop
 // MIDDLEAWRE
 func CFAuthCheckMiddleware(c CFClient, r *http.Request, scope string) (authResult *models.AuthResult, error *models.CustomError) {
 	accessJWT := getCloudfareToken(r)
-	result, err := c.validateCFToken(r.Context(), accessJWT, scope)
+	result, err := c.ValidateCFToken(r.Context(), accessJWT, scope)
 	if err != nil {
 		return result, &models.CustomError{
 			Code:     models.NotFound,

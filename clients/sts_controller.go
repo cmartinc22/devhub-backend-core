@@ -20,6 +20,7 @@ import (
 
 type STSControllerSpec interface {
 	Validate(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error)
+	ValidateSTSToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error)
 }
 
 type STSClient struct {
@@ -117,7 +118,7 @@ type introspectionService interface {
 // MIDDLEWARE
 func STSAuthCheckMiddleware(sts STSClient, r *http.Request, scope string) (authResult *models.AuthResult, error *models.CustomError) {
 	accessToken := getSTSToken(r)
-	result, err := sts.validateSTSToken(r.Context(), accessToken, scope)
+	result, err := sts.ValidateSTSToken(r.Context(), accessToken, scope)
 	if err != nil {
 		return result, &models.CustomError{
 			Code:     models.NotFound,
@@ -138,7 +139,7 @@ func STSAuthCheckMiddleware(sts STSClient, r *http.Request, scope string) (authR
 	return result, nil
 }
 
-func (c *STSClient) validateSTSToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error) {
+func (c *STSClient) ValidateSTSToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error) {
 	if !c.Config.Enabled {
 		return &models.AuthResult{
 			IsValid: true,
