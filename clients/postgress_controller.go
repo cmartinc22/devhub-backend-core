@@ -17,41 +17,44 @@ import (
 const (
 	defauiltConnString = "postgres://%s:%s@%s:%v/%s?sslmode=disable"
 )
+
 type PostgressControllerSpec interface {
 	Ping(context.Context) error
 	GetConnectionString(context.Context) string
-	Db() *sqlx.DB
 }
 
 type PostgressClient struct {
-	Config *models.DbConfiguration
-	Database     *sqlx.DB
+	Config   *models.DbConfiguration
+	Database *sqlx.DB
 }
 
-// NewClient creates an STS client that contains the introspection service.
-func NewPostgressClient() (PostgressControllerSpec, error) {
-	cfg := readDBConfig()
+// NewClient creates an Postgress client
+func NewPostgressClient() (PostgressClient, error) {
+	cfg, err := readDBConfig()
+	if err != nil {
+		return PostgressClient{}, err
+	}
 
 	db, err := sqlx.Open("postgres", formatConnectinoString(*cfg))
 	if err != nil {
-		return nil, err
+		return PostgressClient{}, err
 	}
 	db = db.Unsafe()
 
-	r := &PostgressClient{Config: cfg, Database: db}
+	r := PostgressClient{Config: cfg, Database: db}
 
 	r.Database.SetMaxOpenConns(10)   // The default is 0 (unlimited)
 	r.Database.SetMaxIdleConns(2)    // defaultMaxIdleConns = 2
 	r.Database.SetConnMaxLifetime(0) // 0, connections are reused forever.
 
 	if err = r.Database.Ping(); err != nil {
-		return nil, err
+		return PostgressClient{}, err
 	}
 
 	return r, nil
 }
 
-func readDBConfig() *models.DbConfiguration {
+func readDBConfig() (*models.DbConfiguration, error) {
 	// Get Configuration FROM ENV
 	cfg := &models.DbConfiguration{}
 
@@ -60,6 +63,7 @@ func readDBConfig() *models.DbConfiguration {
 		cfg.Server = v
 	} else {
 		logs.Fatal("[main] missing POSTGRES_HOST environment")
+		return cfg, fmt.Errorf("[main] missing POSTGRES_HOST environment")
 	}
 
 	if v, ok := os.LookupEnv("POSTGRES_PORT"); ok {
@@ -80,6 +84,7 @@ func readDBConfig() *models.DbConfiguration {
 			cfg.Database = v
 		} else {
 			logs.Fatal("[main] missing POSTGRES_DB environment")
+			return cfg, fmt.Errorf("[main] missing POSTGRES_DB environment")
 		}
 	}
 
@@ -87,12 +92,14 @@ func readDBConfig() *models.DbConfiguration {
 		cfg.User = v
 	} else {
 		logs.Fatal("[main] missing POSTGRES_USER environment")
+		return cfg, fmt.Errorf("[main] missing POSTGRES_USER environment")
 	}
 
 	if v, ok := os.LookupEnv("POSTGRES_PASSWORD"); ok {
 		cfg.Password = v
 	} else {
 		logs.Fatal("[main] missing POSTGRES_PASSWORD environment or db.pwd setting")
+		return cfg, fmt.Errorf("[main] missing POSTGRES_PASSWORD environment or db.pwd setting")
 	}
 
 	if v, ok := os.LookupEnv("POSTGRES_CONN_STR"); ok {
@@ -102,12 +109,11 @@ func readDBConfig() *models.DbConfiguration {
 		logs.Debug("[main] missing POSTGRES_CONN_STR environment. Using Default")
 	}
 
-
-	return cfg
+	return cfg, nil
 }
 
 func (db *PostgressClient) Ping(context.Context) error {
-	if db.Db != nil {
+	if db.Database != nil {
 		return db.Database.Ping()
 	}
 	return errors.New("missing db conection")
@@ -119,8 +125,4 @@ func formatConnectinoString(cfg models.DbConfiguration) string {
 
 func (db *PostgressClient) GetConnectionString(context.Context) string {
 	return formatConnectinoString(*db.Config)
-}
-
-func (db *PostgressClient) Db() *sqlx.DB {
-	return db.Database
 }
