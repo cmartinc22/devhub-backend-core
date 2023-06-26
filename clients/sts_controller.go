@@ -51,11 +51,7 @@ func GetSTSClient() *STSClient {
 
 				stsClientInstance.introspectionService = introspectionService
 			}
-		} else {
-			logs.Debug("Single instance already created.")
 		}
-	} else {
-		logs.Debug("Single instance already created.")
 	}
 
 	return stsClientInstance

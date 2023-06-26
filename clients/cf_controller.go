@@ -46,11 +46,7 @@ func GetCFClient() *CFClient {
 						ClientID: c.AUD,
 				}
 			}
-		} else {
-			logs.Debug("Single instance already created.")
 		}
-	} else {
-		logs.Debug("Single instance already created.")
 	}
 
 	return cFClientInstance

@@ -10,7 +10,7 @@ import (
 	"github.com/pedidosya/peya-go/server"
 )
 
-func addASchemasRoutes(s *server.Server) {
+func AddASchemasRoutes(s *server.Server) {
 	// Expose schemas
 	s.AddRouteWithOptions(
 		"/api/{apiVersion}/schemas/{schema}",
