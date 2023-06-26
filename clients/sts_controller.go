@@ -35,9 +35,11 @@ func GetSTSClient() *STSClient {
 		lock.Lock()
 		defer lock.Unlock()
 		if stsClientInstance == nil {
-			fmt.Println("Creating STS single instance now.")
-			stsClientInstance = &STSClient{}
+			logs.Info("Creating STS single instance now.")
 			c := readSTSConfig()
+			stsClientInstance = &STSClient{
+				Config: c,
+			}
 			if c.Enabled {
 				tokenService, err := newTokenService(c)
 				if err != nil {
@@ -47,10 +49,7 @@ func GetSTSClient() *STSClient {
 
 				introspectionService := sts.NewIntrospectionService(c.URL, tokenService)
 
-				stsClientInstance = &STSClient{
-					introspectionService: introspectionService,
-					Config:               c,
-				}
+				stsClientInstance.introspectionService = introspectionService
 			}
 		} else {
 			logs.Debug("Single instance already created.")

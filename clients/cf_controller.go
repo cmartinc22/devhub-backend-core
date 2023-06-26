@@ -36,15 +36,14 @@ func GetCFClient() *CFClient {
 		lock.Lock()
 		defer lock.Unlock()
 		if cFClientInstance == nil {
-			fmt.Println("Creating CF single instance now.")
-			cFClientInstance = &CFClient{}
+			logs.Info("Creating CF single instance now.")
 			c := readCFConfig()
+			cFClientInstance = &CFClient{
+				Config: c,
+			}
 			if c.Enabled {
-				cFClientInstance = &CFClient{
-					Config:  c,
-					cfConfig: &oidc.Config{
+				cFClientInstance.cfConfig = &oidc.Config{
 						ClientID: c.AUD,
-					},
 				}
 			}
 		} else {
