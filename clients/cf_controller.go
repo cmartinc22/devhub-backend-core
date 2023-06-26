@@ -18,11 +18,11 @@ var lock = &sync.Mutex{}
 type CFControllerSpec interface {
 	Validate(ctx context.Context, accessToken string) (*oidc.IDToken, error)
 	ValidateCFToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error)
+	GetPublicDomain() string
 }
 
 type CFClient struct {
-	enabled  bool
-	config   *models.CFConfiguration
+	Config   *models.CFConfiguration
 	cfConfig *oidc.Config
 	verifier *oidc.IDTokenVerifier
 }
@@ -31,42 +31,31 @@ var cFClientInstance *CFClient
 
 const teamDomain = "https://deliveryhero.cloudflareaccess.com"
 
-func getCFClient() *CFClient {
+func GetCFClient() *CFClient {
 	if cFClientInstance == nil {
 		lock.Lock()
 		defer lock.Unlock()
 		if cFClientInstance == nil {
-			fmt.Println("Creating single instance now.")
+			fmt.Println("Creating CF single instance now.")
+			cFClientInstance = &CFClient{}
 			c := readCFConfig()
-			cFClientInstance = &CFClient{
-				enabled: c.Enabled,
-				config:  c,
-				cfConfig: &oidc.Config{
-					ClientID: c.AUD,
-				},
+			if c.Enabled {
+				cFClientInstance = &CFClient{
+					Config:  c,
+					cfConfig: &oidc.Config{
+						ClientID: c.AUD,
+					},
+				}
 			}
 		} else {
-			fmt.Println("Single instance already created.")
+			logs.Debug("Single instance already created.")
 		}
 	} else {
-		fmt.Println("Single instance already created.")
+		logs.Debug("Single instance already created.")
 	}
 
 	return cFClientInstance
 }
-
-/*
-func NewCFClient() CFControllerSpec {
-	c := readCFConfig()
-	return &CFClient{
-		enabled: c.Enabled,
-		config:  c,
-		cfConfig: &oidc.Config{
-			ClientID: c.AUD,
-		},
-	}
-}
-*/
 
 func (c *CFClient) Validate(ctx context.Context, accessToken string) (*oidc.IDToken, error) {
 	if c.verifier == nil {
@@ -77,7 +66,7 @@ func (c *CFClient) Validate(ctx context.Context, accessToken string) (*oidc.IDTo
 }
 
 func (c *CFClient) ValidateCFToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error) {
-	if !c.enabled {
+	if !c.Config.Enabled {
 		return &models.AuthResult{
 			IsValid: true,
 			Enabled: false,
@@ -120,9 +109,9 @@ func (c *CFClient) ValidateCFToken(ctx context.Context, accessToken string, scop
 }
 
 // MIDDLEAWRE
-func CFAuthCheckMiddleware(c CFClient, r *http.Request, scope string) (authResult *models.AuthResult, error *models.CustomError) {
+func CFAuthCheckMiddleware(r *http.Request, scope string) (authResult *models.AuthResult, error *models.CustomError) {
 	accessJWT := getCloudfareToken(r)
-	result, err := c.ValidateCFToken(r.Context(), accessJWT, scope)
+	result, err := GetCFClient().ValidateCFToken(r.Context(), accessJWT, scope)
 	if err != nil {
 		return result, &models.CustomError{
 			Code:     models.NotFound,
@@ -157,12 +146,16 @@ func getCloudfareToken(r *http.Request) string {
 	return ""
 }
 
+func (c *CFClient) GetPublicDomain() string {
+	return GetCFClient().Config.ServicePublicDomain
+}
+
 func readCFConfig() *models.CFConfiguration {
 	// Get Configuration FROM ENV
 	cfg := &models.CFConfiguration{}
 
 	// Anything that is not AUTH_ENABLED="true" will disable Authentication
-	if authEnabled, ok := os.LookupEnv("AUTH_ENABLED"); ok && authEnabled != "true" {
+	if authEnabled, ok := os.LookupEnv("AUTH_ENABLED"); ok && authEnabled == "true" {
 		if cfEnabled, ok := os.LookupEnv("CF_ENABLED"); ok {
 			cfg.Enabled = cfEnabled == "true"
 		}

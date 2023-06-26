@@ -18,6 +18,8 @@ import (
 	"github.com/pedidosya/peya-go/logs"
 )
 
+var stsClientInstance *STSClient
+
 type STSControllerSpec interface {
 	Validate(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error)
 	ValidateSTSToken(ctx context.Context, accessToken string, scope string) (*models.AuthResult, error)
@@ -28,24 +30,36 @@ type STSClient struct {
 	Config               *models.STSConfiguration
 }
 
-// NewClient creates an STS client that contains the introspection service.
-func NewSTSClient() STSControllerSpec {
-	c := readSTSConfig()
-	if c.Enabled {
-		tokenService, err := newTokenService(c)
-		if err != nil {
-			logs.Errorf("Could not initialise STS Client: %v", err.Error())
-			panic(err)
-		}
+func GetSTSClient() *STSClient {
+	if stsClientInstance == nil {
+		lock.Lock()
+		defer lock.Unlock()
+		if stsClientInstance == nil {
+			fmt.Println("Creating STS single instance now.")
+			stsClientInstance = &STSClient{}
+			c := readSTSConfig()
+			if c.Enabled {
+				tokenService, err := newTokenService(c)
+				if err != nil {
+					logs.Errorf("Could not initialise STS Client: %v", err.Error())
+					panic(err)
+				}
 
-		introspectionService := sts.NewIntrospectionService(c.URL, tokenService)
+				introspectionService := sts.NewIntrospectionService(c.URL, tokenService)
 
-		return &STSClient{
-			introspectionService: introspectionService,
-			Config:               c,
+				stsClientInstance = &STSClient{
+					introspectionService: introspectionService,
+					Config:               c,
+				}
+			}
+		} else {
+			logs.Debug("Single instance already created.")
 		}
+	} else {
+		logs.Debug("Single instance already created.")
 	}
-	return nil
+
+	return stsClientInstance
 }
 
 // newTokenService creates a new STS token service.
@@ -116,9 +130,9 @@ type introspectionService interface {
 }
 
 // MIDDLEWARE
-func STSAuthCheckMiddleware(sts STSClient, r *http.Request, scope string) (authResult *models.AuthResult, error *models.CustomError) {
+func STSAuthCheckMiddleware(r *http.Request, scope string) (authResult *models.AuthResult, error *models.CustomError) {
 	accessToken := getSTSToken(r)
-	result, err := sts.ValidateSTSToken(r.Context(), accessToken, scope)
+	result, err := GetSTSClient().ValidateSTSToken(r.Context(), accessToken, scope)
 	if err != nil {
 		return result, &models.CustomError{
 			Code:     models.NotFound,
@@ -169,12 +183,12 @@ func getSTSToken(r *http.Request) string {
 	return r.Header.Get("Authorization")
 }
 
-func readSTSConfig() (*models.STSConfiguration) {
+func readSTSConfig() *models.STSConfiguration {
 	// Get Configuration FROM ENV
 	cfg := &models.STSConfiguration{}
 
 	// Anything that is not AUTH_ENABLED="true" will disable Authentication
-	if authEnabled, ok := os.LookupEnv("AUTH_ENABLED"); ok && authEnabled != "true" {
+	if authEnabled, ok := os.LookupEnv("AUTH_ENABLED"); ok && authEnabled == "true" {
 		if stsEnabled, ok := os.LookupEnv("STS_ENABLED"); ok {
 			cfg.Enabled = stsEnabled == "true"
 		}
