@@ -1,7 +1,7 @@
 //go:build !test
 // +build !test
 
-package main
+package routes
 
 import (
 	"net/http"
@@ -53,4 +53,3 @@ func AddOASRoutes(cfg *models.DocsConfiguration, s *server.Server) {
 		http.MethodOptions,
 	)
 }
-

@@ -1,20 +1,21 @@
 //go:build !test
 // +build !test
 
-package main
+package routes
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/cmartinc22/devhub-backend-core/handlers"
 	"github.com/pedidosya/peya-go/server"
 )
 
-func AddASchemasRoutes(s *server.Server) {
+func AddASchemasRoutes(s *server.Server, path string) {
 	// Expose schemas
 	s.AddRouteWithOptions(
-		"/api/{apiVersion}/schemas/{schema}",
-		handlers.HandleGetSchemas("api"),
+		fmt.Sprintf("/%s/{apiVersion}/schemas/{schema}", path),
+		handlers.HandleGetSchemas(path),
 		&server.RouteOptions{
 			CORSEnabled: true,
 			CORSOptions: []server.CORSOption{
