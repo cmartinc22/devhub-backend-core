@@ -14,7 +14,7 @@ import (
 )
 
 // Associate route to expose swagger apidoc on non-productive endpoints
-func AddApiDocRoutes(cfg *models.DocsConfiguration, s *server.Server) {
+func AddApiDocRoutes(s *server.Server, cfg *models.DocsConfiguration) {
 	if cfg.Enabled {
 		// Expose swagger compiled HTML view
 		s.AddRouteWithOptions(
@@ -37,7 +37,7 @@ func AddApiDocRoutes(cfg *models.DocsConfiguration, s *server.Server) {
 	}
 }
 
-func AddOASRoutes(cfg *models.DocsConfiguration, s *server.Server) {
+func AddOASRoutes(s *server.Server, cfg *models.DocsConfiguration) {
 	// Expose OAS definition
 	s.AddRouteWithOptions(
 		"/api/{apiVersion}/oas.yaml",

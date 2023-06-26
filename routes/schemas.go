@@ -11,7 +11,7 @@ import (
 	"github.com/pedidosya/peya-go/server"
 )
 
-func AddASchemasRoutes(s *server.Server, path string) {
+func AddSchemasRoutes(s *server.Server, path string) {
 	// Expose schemas
 	s.AddRouteWithOptions(
 		fmt.Sprintf("/%s/{apiVersion}/schemas/{schema}", path),
