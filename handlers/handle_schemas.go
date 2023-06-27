@@ -32,7 +32,9 @@ func HandleGetSchemas(path string) func(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
-		schema_content, err := content.ReadFile(fmt.Sprintf("api/%s/schemas/%s", apiVersion, schema))
+		schema_content, err := content.ReadFile(fmt.Sprintf("../api/%s/schemas/%s", apiVersion, schema))
+		logs.Debug(schema_content)
+		logs.Debug(err)
 		if err != nil {
 			schema_content, err = os.ReadFile(fmt.Sprintf("api/%s/schemas/%s", apiVersion, schema))
 		}
