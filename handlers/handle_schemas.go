@@ -32,6 +32,9 @@ func HandleGetSchemas(path string) func(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
+		schema_content_test, err := content.ReadFile("handle_oas.go")
+		logs.Debug(schema_content_test)
+		logs.Debug(err)
 		schema_content, err := content.ReadFile(fmt.Sprintf("../api/%s/schemas/%s", apiVersion, schema))
 		logs.Debug(schema_content)
 		logs.Debug(err)
