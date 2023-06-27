@@ -14,6 +14,7 @@ import (
 	"github.com/pedidosya/peya-go/server"
 )
 
+//go:embed api/**/*
 var content embed.FS
 
 func HandleGetSchemas(path string) func(w http.ResponseWriter, r *http.Request) {
@@ -32,12 +33,7 @@ func HandleGetSchemas(path string) func(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
-		schema_content_test, err := content.ReadFile("handle_oas.go")
-		logs.Debug(schema_content_test)
-		logs.Debug(err)
-		schema_content, err := content.ReadFile(fmt.Sprintf("../api/%s/schemas/%s", apiVersion, schema))
-		logs.Debug(schema_content)
-		logs.Debug(err)
+		schema_content, err := content.ReadFile(fmt.Sprintf("api/%s/schemas/%s", apiVersion, schema))
 		if err != nil {
 			schema_content, err = os.ReadFile(fmt.Sprintf("api/%s/schemas/%s", apiVersion, schema))
 		}
