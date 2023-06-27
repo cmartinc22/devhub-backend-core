@@ -7,11 +7,14 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"embed"
 
 	"github.com/cmartinc22/devhub-backend-core/controllers"
 	"github.com/pedidosya/peya-go/logs"
 	"github.com/pedidosya/peya-go/server"
 )
+
+var content embed.FS
 
 func HandleGetSchemas(path string) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -29,8 +32,11 @@ func HandleGetSchemas(path string) func(w http.ResponseWriter, r *http.Request) 
 			return
 		}
 
-		schema_content, err := os.ReadFile(fmt.Sprintf("api/%s/schemas/%s", apiVersion, schema))
-
+		schema_content, err := content.ReadFile(fmt.Sprintf("api/%s/schemas/%s", apiVersion, schema))
+		if err != nil {
+			schema_content, err = os.ReadFile(fmt.Sprintf("api/%s/schemas/%s", apiVersion, schema))
+		}
+		
 		if err != nil {
 			switch err {
 			case os.ErrNotExist:
